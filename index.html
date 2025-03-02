@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Redux</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="settings">
+            <label for="player1Color">Player 1 Color:</label>
+            <input type="color" id="player1Color" value="#ffffff">
+            <label for="player2Color">Player 2 Color:</label>
+            <input type="color" id="player2Color" value="#ffffff">
+            <button id="pauseButton">Pause</button>
+            <div id="gameMode">
+                <label>
+                    <input type="radio" name="mode" value="single" checked> Single Player
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="multi"> Multiplayer
+                </label>
+            </div>
+            <div id="difficulty">
+                <label for="difficultySelect">Difficulty:</label>
+                <select id="difficultySelect" aria-label="Difficulty level">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+        <!-- Audio elements commented out as requested -->
+        <!-- 
+        <audio id="hitSound" src="hit.wav"></audio>
+        <audio id="scoreSound" src="score.wav"></audio>
+        <audio id="powerUpSound" src="powerup.wav"></audio>
+        -->
+    </div>
+    <script src="game.js"></script>
+</body>
+</html> 
