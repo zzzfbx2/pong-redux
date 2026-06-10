@@ -288,8 +288,9 @@ def draw_chutes(d, t, nx, ny):
         return
     tt = t - 17.6
     for dx, sway, ph in CHUTES:
-        x = nx + dx * tt * 70
-        y = ny - 46 * tt + 14 * math.sin(t * sway + ph)
+        # leave from the vehicle body, clear of the caption block
+        x = nx + dx * (60 + tt * 110)
+        y = ny + 260 - 40 * tt + 14 * math.sin(t * sway + ph)
         a = int(255 * a0)
         d.pieslice([x - 46, y - 46, x + 46, y + 10], 180, 360,
                    fill=(255, 205, 90, a))
@@ -335,7 +336,7 @@ def draw_ticker(d, t):
     if vis <= 0.01:
         return
     p = price(t)
-    rising = p >= price(t - 0.2) - 0.01
+    rising = p - price(t - 0.2) > 0.005      # flat-after-crash stays red
     col = (90, 230, 130) if rising else (240, 80, 80)
     arrow = "▲" if rising else "▼"
     pct = (p / IPO_PRICE - 1) * 100
