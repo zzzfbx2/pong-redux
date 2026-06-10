@@ -82,7 +82,7 @@ for i, _ in enumerate(HATE):
                      rng.random() * math.tau))
 
 CAPTIONS = [
-    (1.5, 6.2, "Imagine a hundred million people\nhoping you fail."),
+    (1.5, 6.2, "Imagine a hundred million\npeople hoping you fail."),
     (6.6, 9.6, "They cheered when the\nearly ones exploded."),
     (12.0, 16.0, "But hate has never\nreached orbit."),
     (16.6, 21.4, "Engines don't read\nthe comments."),
@@ -267,15 +267,20 @@ def draw_caption(d, t):
         a = smooth(t0, t0 + 0.6, t) * (1 - smooth(t1 - 0.6, t1, t))
         if a <= 0.01:
             continue
-        f = font(FONT_BOLD, 64)
         lines = text.split("\n")
+        size = 64
+        f = font(FONT_BOLD, size)
+        widest = max(d.textlength(ln, font=f) for ln in lines)
+        if widest > W * 0.92:                  # shrink to fit the frame
+            size = int(size * W * 0.92 / widest)
+            f = font(FONT_BOLD, size)
         y = H * 0.150
         for ln in lines:
             tw = d.textlength(ln, font=f)
             x = (W - tw) / 2
             d.text((x + 4, y + 4), ln, font=f, fill=(0, 0, 0, int(200 * a)))
             d.text((x, y), ln, font=f, fill=(240, 242, 248, int(255 * a)))
-            y += 86
+            y += size * 1.34
 
 
 def draw_countdown(d, t):
@@ -342,7 +347,7 @@ def render_frame(i, scroll):
     img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
 
     out = np.asarray(img, dtype=np.float64)
-    grain = np.random.default_rng(i).normal(0, 5.5, (H, W, 1))
+    grain = np.random.default_rng(i).normal(0, 3.5, (H, W, 1))
     out = np.clip(out * VIGNETTE + grain, 0, 255)
     # global fade in/out
     fade = smooth(0, 0.8, t) * (1 - smooth(DUR - 0.8, DUR, t))
@@ -405,7 +410,8 @@ def main():
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-",
            "-i", audio_path,
-           "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+           "-vf", "hqdn3d=1.5:1:3:2",
+           "-c:v", "libx264", "-preset", "medium", "-crf", "24",
            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
            "-shortest", "-movflags", "+faststart", out_path]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
